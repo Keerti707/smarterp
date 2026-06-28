@@ -5,20 +5,22 @@ import { ReactNode } from "react";
 import { AppHeader } from "./app-header";
 import { AppSidebar } from "./app-sidebar";
 
-type AppShellProps = {
+type Props = {
   children: ReactNode;
 };
 
-export function AppShell({ children }: AppShellProps) {
+export function AppShell({ children }: Props) {
   return (
     <div className="flex min-h-screen bg-[#09090B] text-white">
       <AppSidebar />
 
-      <div className="flex min-h-screen flex-1 flex-col overflow-hidden">
+      <div className="flex min-w-0 flex-1 flex-col">
         <AppHeader />
 
-        <main className="flex-1 overflow-y-auto p-8">
-          {children}
+        <main className="flex-1 overflow-y-auto bg-gradient-to-br from-[#09090B] via-[#0D0C14] to-[#14101E] p-8">
+          <div className="mx-auto w-full max-w-[1700px]">
+            {children}
+          </div>
         </main>
       </div>
     </div>

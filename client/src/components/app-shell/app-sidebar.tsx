@@ -1,7 +1,10 @@
+import Link from "next/link";
 import {
   BarChart3,
+  Boxes,
   Building2,
   CreditCard,
+  FileBarChart,
   FileText,
   Home,
   Package,
@@ -13,68 +16,103 @@ import {
 } from "lucide-react";
 
 const navItems = [
-  { label: "Dashboard", icon: Home, active: true },
-  { label: "Masters", icon: Building2 },
-  { label: "Inventory", icon: Package },
-  { label: "Customers", icon: Users },
-  { label: "Sales", icon: ReceiptText },
-  { label: "Purchases", icon: ShoppingCart },
-  { label: "Accounting", icon: WalletCards },
-  { label: "Banking", icon: CreditCard },
-  { label: "Reports", icon: BarChart3 },
-  { label: "Settings", icon: Settings },
+  { label: "Dashboard", icon: Home, href: "/dashboard", active: true },
+  { label: "Company", icon: Building2, href: "/company-selection" },
+  { label: "Inventory", icon: Package, href: "#" },
+  { label: "Stock", icon: Boxes, href: "#" },
+  { label: "Customers", icon: Users, href: "#" },
+  { label: "Sales", icon: ReceiptText, href: "#" },
+  { label: "Purchases", icon: ShoppingCart, href: "#" },
+  { label: "Accounting", icon: WalletCards, href: "#" },
+  { label: "Banking", icon: CreditCard, href: "#" },
+  { label: "Reports", icon: FileBarChart, href: "#" },
+  { label: "Settings", icon: Settings, href: "#" },
 ];
 
 export function AppSidebar() {
   return (
-    <aside className="h-screen w-72 shrink-0 border-r border-white/10 bg-[#0f0b18]/90 p-5 text-white">
-      <div className="mb-8 flex items-center gap-3">
-        <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-violet-600 via-[#B87333] to-[#F3C56B] shadow-lg shadow-violet-950/40">
-          <FileText className="h-5 w-5" />
+    <aside className="flex h-screen w-72 flex-col border-r border-white/10 bg-gradient-to-b from-[#0E0A18] via-[#13111F] to-[#09090B] px-5 py-6 text-white">
+
+      <div className="flex items-center gap-4">
+
+        <div className="flex h-14 w-14 items-center justify-center rounded-3xl bg-gradient-to-br from-violet-600 via-[#B87333] to-[#F3C56B] shadow-xl shadow-violet-950/50">
+          <FileText className="h-6 w-6" />
         </div>
 
         <div>
-          <h1 className="text-lg font-black tracking-tight">SmartERP</h1>
-          <p className="text-xs text-muted-foreground">Tally-inspired Cloud ERP</p>
+          <h1 className="text-xl font-black tracking-tight">
+            SmartERP
+          </h1>
+
+          <p className="text-xs text-muted-foreground">
+            Enterprise Workspace
+          </p>
         </div>
+
       </div>
 
-      <nav className="space-y-2">
+      <div className="my-8 h-px bg-white/10" />
+
+      <nav className="flex-1 space-y-2">
+
         {navItems.map((item) => (
-          <button
+          <Link
             key={item.label}
+            href={item.href}
             className={[
-              "group flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-left text-sm transition",
+              "group flex items-center gap-4 rounded-2xl px-4 py-3 transition-all duration-200",
               item.active
-                ? "bg-violet-600/20 text-white ring-1 ring-violet-500/30"
-                : "text-muted-foreground hover:bg-white/5 hover:text-white",
+                ? "bg-gradient-to-r from-violet-600/30 to-[#B87333]/20 ring-1 ring-violet-500/30"
+                : "hover:bg-white/5",
             ].join(" ")}
           >
             <item.icon
               className={[
-                "h-4 w-4 transition",
+                "h-5 w-5",
                 item.active
                   ? "text-[#F3C56B]"
                   : "text-muted-foreground group-hover:text-[#F3C56B]",
               ].join(" ")}
             />
-            <span>{item.label}</span>
-          </button>
+
+            <span
+              className={[
+                "font-medium",
+                item.active
+                  ? "text-white"
+                  : "text-muted-foreground group-hover:text-white",
+              ].join(" ")}
+            >
+              {item.label}
+            </span>
+
+          </Link>
         ))}
+
       </nav>
 
-      <div className="mt-8 rounded-3xl border border-white/10 bg-white/[0.04] p-4">
-        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#F3C56B]">
-          Shortcuts
-        </p>
+      <div className="mt-6 rounded-3xl border border-white/10 bg-gradient-to-br from-violet-950/40 to-[#B87333]/10 p-5">
 
-        <div className="mt-4 space-y-2 text-xs text-muted-foreground">
-          <p>F8 — Sales Voucher</p>
-          <p>F9 — Purchase Voucher</p>
-          <p>Alt + L — Ledger</p>
-          <p>Ctrl + K — Search</p>
+        <div className="mb-4 flex items-center gap-3">
+          <BarChart3 className="h-5 w-5 text-[#F3C56B]" />
+
+          <div>
+            <p className="font-semibold">
+              Business Insights
+            </p>
+
+            <p className="text-xs text-muted-foreground">
+              Reports available soon
+            </p>
+          </div>
         </div>
+
+        <button className="w-full rounded-2xl bg-[#F3C56B] py-2 text-sm font-bold text-black transition hover:scale-[1.02]">
+          View Analytics
+        </button>
+
       </div>
+
     </aside>
   );
 }
