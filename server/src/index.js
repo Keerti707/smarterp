@@ -7,6 +7,7 @@ dotenv.config();
 const pool = require("./config/db");
 const authRoutes = require("./routes/auth.routes");
 const companyRoutes = require("./routes/company.routes");
+const inventoryRoutes = require("./routes/inventory.routes");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -39,6 +40,7 @@ app.get("/db-health", async (req, res) => {
 
 app.use("/api/auth", authRoutes);
 app.use("/api/companies", companyRoutes);
+app.use("/api/inventory", inventoryRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

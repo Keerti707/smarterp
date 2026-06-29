@@ -6,12 +6,19 @@ const pool = require("../config/db");
 
 async function runMigrations() {
   try {
-    const migrationPath = path.join(__dirname, "migrations", "001_initial_schema.sql");
-    const sql = fs.readFileSync(migrationPath, "utf8");
+    const migrationsDir = path.join(__dirname, "migrations");
+    const files = fs
+      .readdirSync(migrationsDir)
+      .filter((file) => file.endsWith(".sql"))
+      .sort();
 
-    await pool.query(sql);
+    for (const file of files) {
+      const sql = fs.readFileSync(path.join(migrationsDir, file), "utf8");
+      await pool.query(sql);
+      console.log(`✅ Ran migration: ${file}`);
+    }
 
-    console.log("✅ Database schema created successfully");
+    console.log("✅ All migrations completed");
   } catch (error) {
     console.error("❌ Migration failed:", error.message);
   } finally {
