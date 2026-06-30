@@ -1,79 +1,59 @@
 "use client";
 
-import {
-  Bell,
-  ChevronDown,
-  Search,
-  Sparkles,
-} from "lucide-react";
+import { Bell, Search } from "lucide-react";
 
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 export function AppHeader() {
   return (
-    <header className="sticky top-0 z-50 flex h-20 items-center justify-between border-b border-white/10 bg-[#09090B]/80 px-8 backdrop-blur-xl">
+    <header className="sticky top-0 z-40 border-b border-white/10 bg-[#09090B]/90 backdrop-blur-xl">
+      <div className="flex h-20 items-center justify-between px-8">
 
-      <div className="flex items-center gap-6">
+        <div className="relative w-full max-w-md">
 
-        <div>
-          <Badge className="mb-2 border-[#F3C56B]/30 bg-[#F3C56B]/10 text-[#F3C56B]">
-            SmartERP Workspace
-          </Badge>
-
-          <h1 className="text-3xl font-black tracking-tight text-white">
-            Dashboard
-          </h1>
-        </div>
-
-        <div className="relative hidden xl:block">
-          <Search className="absolute left-4 top-3.5 h-4 w-4 text-muted-foreground" />
+          <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
 
           <Input
-            placeholder="Search anything...   Ctrl + K"
-            className="h-12 w-[420px] rounded-2xl border-white/10 bg-white/5 pl-11"
+            placeholder="Search customers, invoices, inventory..."
+            className="h-12 rounded-2xl border-white/10 bg-white/5 pl-11 text-white placeholder:text-gray-500"
           />
+
+        </div>
+
+        <div className="flex items-center gap-5">
+
+          <button className="relative rounded-2xl bg-white/5 p-3 transition hover:bg-white/10">
+            <Bell className="h-5 w-5" />
+
+            <span className="absolute right-2 top-2 h-2.5 w-2.5 rounded-full bg-red-500" />
+          </button>
+
+          <div className="flex items-center gap-3 rounded-2xl bg-white/5 px-3 py-2">
+
+            <Avatar>
+              <AvatarFallback className="bg-violet-600 text-white">
+                K
+              </AvatarFallback>
+            </Avatar>
+
+            <div>
+
+              <p className="text-sm font-semibold">
+                Keerti
+              </p>
+
+              <p className="text-xs text-gray-400">
+                Administrator
+              </p>
+
+            </div>
+
+          </div>
+
         </div>
 
       </div>
-
-      <div className="flex items-center gap-4">
-
-        <button className="flex h-11 w-11 items-center justify-center rounded-2xl border border-white/10 bg-white/5 transition hover:bg-white/10">
-          <Sparkles className="h-5 w-5 text-[#F3C56B]" />
-        </button>
-
-        <button className="relative flex h-11 w-11 items-center justify-center rounded-2xl border border-white/10 bg-white/5 transition hover:bg-white/10">
-          <Bell className="h-5 w-5 text-white" />
-
-          <span className="absolute right-3 top-3 h-2.5 w-2.5 rounded-full bg-[#F3C56B]" />
-        </button>
-
-        <button className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 px-3 py-2 transition hover:bg-white/10">
-
-          <Avatar className="h-10 w-10">
-            <AvatarFallback className="bg-gradient-to-br from-violet-600 via-[#B87333] to-[#F3C56B] font-bold text-white">
-              K
-            </AvatarFallback>
-          </Avatar>
-
-          <div className="hidden text-left lg:block">
-            <p className="font-semibold text-white">
-              Keerti Gupta
-            </p>
-
-            <p className="text-xs text-muted-foreground">
-              Administrator
-            </p>
-          </div>
-
-          <ChevronDown className="h-4 w-4 text-muted-foreground" />
-
-        </button>
-
-      </div>
-
     </header>
   );
 }

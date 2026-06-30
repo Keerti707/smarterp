@@ -11,14 +11,14 @@ type Props = {
 
 export function AppShell({ children }: Props) {
   return (
-    <div className="flex min-h-screen bg-[#09090B] text-white">
+    <div className="flex h-screen overflow-hidden bg-[#09090B] text-white">
       <AppSidebar />
 
       <div className="flex min-w-0 flex-1 flex-col">
         <AppHeader />
 
-        <main className="flex-1 overflow-y-auto bg-gradient-to-br from-[#09090B] via-[#0D0C14] to-[#14101E] p-8">
-          <div className="mx-auto w-full max-w-[1700px]">
+        <main className="flex-1 overflow-y-auto bg-gradient-to-br from-[#09090B] via-[#0D0C14] to-[#14101E] px-6 py-8">
+          <div className="mx-auto w-full max-w-[1500px]">
             {children}
           </div>
         </main>
