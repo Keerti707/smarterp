@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { Package, Plus, Search } from "lucide-react";
+import { Edit, Package, Plus, Search, Trash2 } from "lucide-react";
 
 import { AppShell } from "@/components/app-shell/app-shell";
 import { apiRequest } from "@/services/api";
@@ -29,20 +29,22 @@ type Item = {
   current_stock: string;
 };
 
+const emptyForm = {
+  name: "",
+  sku: "",
+  hsn_code: "",
+  purchase_price: "",
+  selling_price: "",
+  opening_stock: "",
+};
+
 export default function InventoryPage() {
   const [company, setCompany] = useState<Company | null>(null);
   const [items, setItems] = useState<Item[]>([]);
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState(false);
-
-  const [form, setForm] = useState({
-    name: "",
-    sku: "",
-    hsn_code: "",
-    purchase_price: "",
-    selling_price: "",
-    opening_stock: "",
-  });
+  const [editingItem, setEditingItem] = useState<Item | null>(null);
+  const [form, setForm] = useState(emptyForm);
 
   async function loadInventory(companyId: string) {
     const data = await apiRequest(`/inventory/${companyId}`);
@@ -67,28 +69,65 @@ export default function InventoryPage() {
     );
   }, [items, query]);
 
-  async function createItem(event: React.FormEvent<HTMLFormElement>) {
+  function openCreate() {
+    setEditingItem(null);
+    setForm(emptyForm);
+    setOpen(true);
+  }
+
+  function openEdit(item: Item) {
+    setEditingItem(item);
+    setForm({
+      name: item.name,
+      sku: item.sku || "",
+      hsn_code: item.hsn_code || "",
+      purchase_price: item.purchase_price,
+      selling_price: item.selling_price,
+      opening_stock: item.current_stock,
+    });
+    setOpen(true);
+  }
+
+  async function saveItem(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!company) return;
 
-    await apiRequest(`/inventory/${company.id}`, {
-      method: "POST",
-      body: JSON.stringify({
-        ...form,
-        purchase_price: Number(form.purchase_price || 0),
-        selling_price: Number(form.selling_price || 0),
-        opening_stock: Number(form.opening_stock || 0),
-      }),
-    });
+    if (editingItem) {
+      await apiRequest(`/inventory/item/${editingItem.id}`, {
+        method: "PUT",
+        body: JSON.stringify({
+          name: form.name,
+          sku: form.sku,
+          hsn_code: form.hsn_code,
+          purchase_price: Number(form.purchase_price || 0),
+          selling_price: Number(form.selling_price || 0),
+          current_stock: Number(form.opening_stock || 0),
+        }),
+      });
+    } else {
+      await apiRequest(`/inventory/${company.id}`, {
+        method: "POST",
+        body: JSON.stringify({
+          ...form,
+          purchase_price: Number(form.purchase_price || 0),
+          selling_price: Number(form.selling_price || 0),
+          opening_stock: Number(form.opening_stock || 0),
+        }),
+      });
+    }
 
     setOpen(false);
-    setForm({
-      name: "",
-      sku: "",
-      hsn_code: "",
-      purchase_price: "",
-      selling_price: "",
-      opening_stock: "",
+    setEditingItem(null);
+    setForm(emptyForm);
+    loadInventory(company.id);
+  }
+
+  async function deleteItem(itemId: string) {
+    if (!company) return;
+    if (!confirm("Delete this inventory item?")) return;
+
+    await apiRequest(`/inventory/item/${itemId}`, {
+      method: "DELETE",
     });
 
     loadInventory(company.id);
@@ -105,7 +144,7 @@ export default function InventoryPage() {
 
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-              <Button className="bg-violet-600 hover:bg-violet-700">
+              <Button onClick={openCreate} className="bg-violet-600 hover:bg-violet-700">
                 <Plus className="mr-2 h-4 w-4" />
                 Add Item
               </Button>
@@ -113,10 +152,12 @@ export default function InventoryPage() {
 
             <DialogContent className="glass-card border-white/10">
               <DialogHeader>
-                <DialogTitle>Add Inventory Item</DialogTitle>
+                <DialogTitle>
+                  {editingItem ? "Edit Inventory Item" : "Add Inventory Item"}
+                </DialogTitle>
               </DialogHeader>
 
-              <form onSubmit={createItem} className="grid gap-4">
+              <form onSubmit={saveItem} className="grid gap-4">
                 <div className="grid gap-2">
                   <Label>Item Name</Label>
                   <Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
@@ -149,7 +190,7 @@ export default function InventoryPage() {
                 </div>
 
                 <Button className="bg-violet-600 hover:bg-violet-700">
-                  Save Item
+                  {editingItem ? "Save Changes" : "Save Item"}
                 </Button>
               </form>
             </DialogContent>
@@ -187,11 +228,22 @@ export default function InventoryPage() {
                   </div>
                 </div>
 
-                <div className="text-right">
-                  <p className="font-bold">Stock: {Number(item.current_stock).toFixed(0)}</p>
-                  <p className="text-sm text-muted-foreground">
-                    ₹{Number(item.selling_price).toLocaleString("en-IN")}
-                  </p>
+                <div className="flex items-center gap-6">
+                  <div className="text-right">
+                    <p className="font-bold">Stock: {Number(item.current_stock).toFixed(0)}</p>
+                    <p className="text-sm text-muted-foreground">
+                      ₹{Number(item.selling_price).toLocaleString("en-IN")}
+                    </p>
+                  </div>
+
+                  <div className="flex gap-2">
+                    <Button size="icon" variant="outline" onClick={() => openEdit(item)}>
+                      <Edit className="h-4 w-4" />
+                    </Button>
+                    <Button size="icon" variant="destructive" onClick={() => deleteItem(item.id)}>
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
                 </div>
               </CardContent>
             </Card>
