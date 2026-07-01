@@ -2,23 +2,24 @@
 
 import { useEffect, useState } from "react";
 import {
-  BarChart3,
-  DollarSign,
-  Package,
-  ShoppingCart,
-  TrendingUp,
-  Users,
-} from "lucide-react";
+  Area,
+  AreaChart,
+  CartesianGrid,
+  Pie,
+  PieChart,
+  Cell,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
 
 import { AppShell } from "@/components/app-shell/app-shell";
 import { apiRequest } from "@/services/api";
-import { Card, CardContent } from "@/components/ui/card";
 
-type Company = {
-  id: string;
-};
+type Company = { id: string };
 
-type Report = {
+type ReportData = {
   sales: number;
   purchases: number;
   profit: number;
@@ -27,8 +28,10 @@ type Report = {
   suppliers: number;
 };
 
+const COLORS = ["#8B5CF6", "#F59E0B", "#10B981"];
+
 export default function ReportsPage() {
-  const [report, setReport] = useState<Report>({
+  const [data, setData] = useState<ReportData>({
     sales: 0,
     purchases: 0,
     profit: 0,
@@ -43,40 +46,19 @@ export default function ReportsPage() {
 
     const company: Company = JSON.parse(saved);
 
-    apiRequest(`/reports/${company.id}`).then(setReport);
+    apiRequest(`/reports/${company.id}`).then(setData);
   }, []);
 
-  const cards = [
-    {
-      title: "Sales",
-      value: `₹${report.sales.toLocaleString("en-IN")}`,
-      icon: DollarSign,
-    },
-    {
-      title: "Purchases",
-      value: `₹${report.purchases.toLocaleString("en-IN")}`,
-      icon: ShoppingCart,
-    },
-    {
-      title: "Profit",
-      value: `₹${report.profit.toLocaleString("en-IN")}`,
-      icon: TrendingUp,
-    },
-    {
-      title: "Inventory Items",
-      value: report.inventory,
-      icon: Package,
-    },
-    {
-      title: "Customers",
-      value: report.customers,
-      icon: Users,
-    },
-    {
-      title: "Suppliers",
-      value: report.suppliers,
-      icon: BarChart3,
-    },
+  const revenue = [
+    { name: "Purchases", value: data.purchases },
+    { name: "Sales", value: data.sales },
+    { name: "Profit", value: data.profit },
+  ];
+
+  const distribution = [
+    { name: "Products", value: data.inventory },
+    { name: "Customers", value: data.customers },
+    { name: "Suppliers", value: Math.max(data.suppliers, 1) },
   ];
 
   return (
@@ -84,49 +66,50 @@ export default function ReportsPage() {
       <div className="space-y-8">
 
         <div>
-          <p className="text-sm text-muted-foreground">
-            Business Analytics
-          </p>
-
-          <h1 className="text-5xl font-black">
-            Reports
-          </h1>
+          <p className="text-sm text-gray-400">Business Analytics</p>
+          <h1 className="text-5xl font-black">Reports</h1>
         </div>
 
-        <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+        <div className="grid gap-6 xl:grid-cols-2">
 
-          {cards.map((card) => (
+          <div className="rounded-3xl border border-white/10 bg-white/5 p-6 h-[420px]">
+            <h2 className="mb-5 text-xl font-bold">Revenue Trend</h2>
 
-            <Card
-              key={card.title}
-              className="border-white/10 bg-white/[0.03]"
-            >
+            <ResponsiveContainer width="100%" height="90%">
+              <AreaChart data={revenue}>
+                <CartesianGrid stroke="#2a2a2a" />
+                <XAxis dataKey="name" />
+                <YAxis />
+                <Tooltip />
+                <Area
+                  dataKey="value"
+                  stroke="#8B5CF6"
+                  fill="#8B5CF655"
+                  strokeWidth={3}
+                />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
 
-              <CardContent className="p-7">
+          <div className="rounded-3xl border border-white/10 bg-white/5 p-6 h-[420px]">
+            <h2 className="mb-5 text-xl font-bold">Business Distribution</h2>
 
-                <div className="mb-6 flex items-center justify-between">
+            <ResponsiveContainer width="100%" height="90%">
+              <PieChart>
+                <Pie
+                  data={distribution}
+                  dataKey="value"
+                  outerRadius={110}
+                >
+                  {distribution.map((_, i) => (
+                    <Cell key={i} fill={COLORS[i]} />
+                  ))}
+                </Pie>
 
-                  <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#B87333]/20">
-
-                    <card.icon className="h-7 w-7 text-[#F3C56B]" />
-
-                  </div>
-
-                </div>
-
-                <p className="text-sm text-muted-foreground">
-                  {card.title}
-                </p>
-
-                <h2 className="mt-3 text-4xl font-black">
-                  {card.value}
-                </h2>
-
-              </CardContent>
-
-            </Card>
-
-          ))}
+                <Tooltip />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
 
         </div>
 
