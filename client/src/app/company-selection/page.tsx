@@ -43,7 +43,7 @@ export default function CompanySelectionPage() {
 
   async function loadCompanies() {
     try {
-      const data = await apiRequest("/companies");
+      const data = await apiRequest("/company");
       setCompanies(data);
     } catch {
       router.push("/login");
@@ -59,7 +59,7 @@ export default function CompanySelectionPage() {
     setLoading(true);
 
     try {
-      await apiRequest("/companies", {
+      await apiRequest("/company", {
         method: "POST",
         body: JSON.stringify(form),
       });
