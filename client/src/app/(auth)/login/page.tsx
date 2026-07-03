@@ -9,6 +9,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+
 export default function LoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState("keerti@example.com");
@@ -19,7 +21,7 @@ export default function LoginPage() {
     event.preventDefault();
     setLoading(true);
 
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000""}/api/auth/login`, {
+    const response = await fetch(`${API_URL}/api/auth/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
