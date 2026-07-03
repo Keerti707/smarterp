@@ -27,7 +27,7 @@ const navItems = [
   { label: "Reports", href: "/reports", icon: BarChart3 },
   { label: "Accounting", href: "/accounting", icon: WalletCards },
   { label: "Banking", href: "/banking", icon: CreditCard },
-  { label: "Settings", href: "#", icon: Settings },
+  { label: "Settings", href: "/dashboard", icon: Settings },
 ];
 
 export function AppSidebar() {
