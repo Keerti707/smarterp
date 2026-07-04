@@ -7,6 +7,32 @@ SmartERP is a full-stack cloud ERP web application built with Next.js, Express.j
 Frontend: https://smarterp-ou75.vercel.app  
 Backend: https://smarterp-dx08.onrender.com  
 
+
+## 📸 Screenshots
+
+### Login
+![Login](screenshots/login.png)
+
+### Company Selection
+![Company Selection](screenshots/company-selection.png)
+
+### Dashboard
+![Dashboard](screenshots/dashboard.png)
+
+### Inventory
+![Inventory](screenshots/inventory.png)
+
+### Customers
+![Customers](screenshots/customers.png)
+
+### Sales
+![Sales](screenshots/sales.png)
+
+### Reports
+![Reports](screenshots/reports.png)
+
+
+
 ## Test Login
 
 Email: keerti@example.com  
